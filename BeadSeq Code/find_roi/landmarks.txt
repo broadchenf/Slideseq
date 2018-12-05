@@ -1,0 +1,16 @@
+Transformation
+SCALED_ROTATION
+
+Source size
+1280	1080
+
+Target size
+1229	1037
+
+Refined source landmarks
+267.0	377.0
+1077.0	173.0
+
+Target landmarks
+253.0	369.0
+1032.0	160.0

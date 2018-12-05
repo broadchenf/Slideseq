@@ -1,0 +1,1 @@
+WHen making a new pipeline function, you should copy the Puck_X_Pipeline.mat file. That is the most up-to-date file.

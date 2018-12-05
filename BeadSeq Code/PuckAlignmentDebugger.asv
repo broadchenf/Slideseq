@@ -1,0 +1,40 @@
+%This script is written for those bad times when your puck isn't aligning
+%to Illumina data, and you think the puck has been mislabeled at some point
+%in the process. We give it a list of possible pucks and a list of Illumina
+%barcodes.
+
+%If we scale this up to many pucks we need to make the matrix of bead
+%barcodes first to avoid having to load in the Bead variable so many times
+clear all
+close all
+
+%Because it takes forever to load in the barcode names from the DGE, this is easiest if you already have an Illumina file to draw from.
+PucksToTry={'Puck_180528_13','Puck_180528_14','Puck_180528_15','Puck_180528_16','Puck_180528_17','Puck_180528_18','Puck_180528_19','Puck_180528_20','Puck_180528_21','Puck_180528_22','Puck_180528_23','Puck_180528_24','Puck_180531_13','Puck_180531_14','Puck_180531_15','Puck_180531_16','Puck_180531_17','Puck_180531_18','Puck_180531_19','Puck_180531_20','Puck_180531_21','Puck_180531_22','Puck_180531_23','Puck_180531_24','Puck_180602_13','Puck_180602_14','Puck_180602_15','Puck_180602_16','Puck_180602_17','Puck_180602_18','Puck_180602_19','Puck_180602_20','Puck_180602_21','Puck_180602_22','Puck_180602_23','Puck_180602_24','Puck_180611_1','Puck_180611_2','Puck_180611_3','Puck_180611_4','Puck_180611_5','Puck_180611_6','Puck_180611_7','Puck_180611_8','Puck_180611_9','Puck_180611_10','Puck_180611_11','Puck_180611_12','Puck_180611_13','Puck_180611_14','Puck_180611_15','Puck_180611_16','Puck_180615_1','Puck_180615_2','Puck_180615_3','Puck_180615_4','Puck_180615_5','Puck_180615_6','Puck_180615_7','Puck_180615_8','Puck_180615_9','Puck_180615_10','Puck_180615_11','Puck_180615_12','Puck_180615_13','Puck_180615_14','Puck_180615_15','Puck_180615_16','Puck_180615_17','Puck_180615_18','Puck_180615_19','Puck_180615_20','Puck_180615_21','Puck_180615_22','Puck_180615_23','Puck_180615_24','Puck_180618_1','Puck_180618_2','Puck_180618_3','Puck_180618_4','Puck_180618_5','Puck_180618_6','Puck_180618_7','Puck_180618_8','Puck_180618_9','Puck_180618_10','Puck_180618_11','Puck_180618_12','Puck_180618_13','Puck_180618_14','Puck_180618_15','Puck_180618_16','Puck_180618_17','Puck_180618_18','Puck_180618_19','Puck_180618_20','Puck_180618_21','Puck_180618_22','Puck_180618_23','Puck_180618_24''Puck_180620_1','Puck_180620_2','Puck_180620_3','Puck_180620_4','Puck_180620_5','Puck_180620_6','Puck_180620_7','Puck_180620_8','Puck_180620_9','Puck_180620_10','Puck_180620_11','Puck_180620_12','Puck_180620_13','Puck_180620_14','Puck_180620_15','Puck_180620_16','Puck_180620_17','Puck_180620_18','Puck_180620_19','Puck_180620_20','Puck_180620_21','Puck_180620_22','Puck_180620_23','Puck_180620_24','Puck_180622_1','Puck_180622_2','Puck_180622_3','Puck_180622_4','Puck_180622_5','Puck_180622_6','Puck_180622_7','Puck_180622_8','Puck_180622_9','Puck_180622_10','Puck_180622_11','Puck_180622_12','Puck_180622_13','Puck_180622_14','Puck_180622_15','Puck_180622_16','Puck_180622_17','Puck_180622_18','Puck_180622_19','Puck_180622_20','Puck_180622_21','Puck_180622_22','Puck_180622_23','Puck_180622_24'};
+%This is the list of other pucks. The other pucks should already be
+%basecalled
+FailedPucks=PucksToTry;
+
+for q=1:length(FailedPucks)
+    disp([Beginning on puck,FailedPuck]
+    FailedPuck=FailedPucks{q}; %this is the puck that failed to map
+    try
+        load(fullfile(GetPuckDirectory(FailedPuck),FindMostRecentMapping(GetPuckDirectory(FailedPuck)),'Illumina.mat'))
+    catch
+        disp(['No Illumina matrix for puck ',FailedPuck])
+        continue
+    end
+    TestBarcodes=[Illumina.Base5Barcode];
+    
+for p=1:length(PucksToTry)
+    try
+        load(fullfile(GetPuckDirectory(PucksToTry{p}),'AnalysisOutputs-selected.mat'),'-mat','Bead');
+    catch
+        disp(['Failed to load basecalling data for ',PucksToTry{p}]);
+    end
+    ReferenceBarcodes=[Bead.Barcodes];
+    Matches(p,q)=length(intersect(TestBarcodes,ReferenceBarcodes));
+    if Matches(p,q)>200
+        disp(['Possible match found between puck ',FailedPuck,' and puck ',PucksToTry{p}])
+    end
+end
+end
