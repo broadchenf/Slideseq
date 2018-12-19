@@ -82,6 +82,7 @@ DropseqMeanAndVariancePath=fullfile(DropboxPath,'BeadSeq Code\DGEMeansAndVarianc
 NumPar=20;
 
 CropImage=1;
+CropSuffix='_Cropped';
 
 EnforceBaseBalance=1;
 BaseBalanceTolerance=0.05;
@@ -252,11 +253,11 @@ for puck=1:length(PuckNames)
     '\nBarcodeSequence: ',num2str(BarcodeSequence)]);
     fclose(fileid);
     ConvertMatToR(OutputFolders{puck});
-    tmp=strsplit(MappingOutputFolders{puck},'\');
-    mappingstarttimereadable=tmp(end-1);
-    mappingstarttimereadable=mappingstarttimereadable{1};
-    mkdir(['\\iodine-cifs\broad_macosko\data\pucks\',PuckNames{puck},'_',mappingstarttimereadable]);
-    copyfile(MappingOutputFolders{puck},['\\iodine-cifs\broad_macosko\data\pucks\',PuckNames{puck},'_',mappingstarttimereadable]);
+%    tmp=strsplit(MappingOutputFolders{puck},'\');
+%    mappingstarttimereadable=tmp(end-1);
+%    mappingstarttimereadable=mappingstarttimereadable{1};
+%    mkdir(['\\iodine-cifs\broad_macosko\data\pucks\',PuckNames{puck},'_',mappingstarttimereadable]);
+%    copyfile(MappingOutputFolders{puck},['\\iodine-cifs\broad_macosko\data\pucks\',PuckNames{puck},'_',mappingstarttimereadable]);
 end
 
 close all
@@ -287,11 +288,11 @@ if CropImage
         UniqueMappedBeads=UniqueMappedBeads(GoodBeads);
         UniqueMappedDGE=UniqueMappedDGE(:,GoodBeads);
         UniqueMappedIlluminaBarcodes=UniqueMappedIlluminaBarcodes(GoodBeads);
-        movefile(fullfile(MappingOutputFolder,'BeadLocationsForR.csv'),fullfile(MappingOutputFolder,'BeadLocationsForRUncropped.csv'));
-        movefile(fullfile(MappingOutputFolder,'MappedDGEForR.csv'),fullfile(MappingOutputFolder,'MappedDGEForRUncropped.csv'));    
-        movefile(fullfile(MappingOutputFolder,'BijectiveMapping.mat'),fullfile(MappingOutputFolder,'BijectiveMappingUncropped.mat'));    
-        save(fullfile(MappingOutputFolder,'BijectiveMapping.mat'),'UniqueMappedBeads','UniqueMappedDGE','UniqueMappedIlluminaBarcodes','GeneNames','-v7.3');
-        ConvertMatToR(OutputFolders{puck});    
+%        movefile(fullfile(MappingOutputFolder,'BeadLocationsForR.csv'),fullfile(MappingOutputFolder,'BeadLocationsForRUncropped.csv'));
+%        movefile(fullfile(MappingOutputFolder,'MappedDGEForR.csv'),fullfile(MappingOutputFolder,'MappedDGEForRUncropped.csv'));    
+%        movefile(fullfile(MappingOutputFolder,'BijectiveMapping.mat'),fullfile(MappingOutputFolder,'BijectiveMappingUncropped.mat'));    
+        save(fullfile(MappingOutputFolder,['BijectiveMapping',CropSuffix,'.mat']),'UniqueMappedBeads','UniqueMappedDGE','UniqueMappedIlluminaBarcodes','GeneNames','-v7.3');
+        ConvertMatToR(OutputFolders{puck},'CropSuffix',CropSuffix);    
     end
 end
 
@@ -430,13 +431,13 @@ for puck=1:length(PuckNames)
 end
 
 
-for puck=1:length(PuckNames)  
-    tmp=strsplit(MappingOutputFolders{puck},'\');
-    mappingstarttimereadable=tmp(end-1);
-    mappingstarttimereadable=mappingstarttimereadable{1};
-    mkdir(['\\iodine-cifs\broad_macosko\data\pucks\',PuckNames{puck},'_',mappingstarttimereadable]);
-    copyfile(MappingOutputFolders{puck},['\\iodine-cifs\broad_macosko\data\pucks\',PuckNames{puck},'_',mappingstarttimereadable]);
-end
+%for puck=1:length(PuckNames)  
+%    tmp=strsplit(MappingOutputFolders{puck},'\');
+%    mappingstarttimereadable=tmp(end-1);
+%    mappingstarttimereadable=mappingstarttimereadable{1};
+%    mkdir(['\\iodine-cifs\broad_macosko\data\pucks\',PuckNames{puck},'_',mappingstarttimereadable]);
+%    copyfile(MappingOutputFolders{puck},['\\iodine-cifs\broad_macosko\data\pucks\',PuckNames{puck},'_',mappingstarttimereadable]);
+%end
 
 %% Evaluate
 
