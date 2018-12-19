@@ -51,8 +51,9 @@ clear all
 close all
 
 PythonPath='C:\Users\sgr\AppData\Local\Programs\Python\Python37\python.exe';
-DropboxPath='D:\Sam\Dropbox (Personal)\Projects\Project - SlideSeq\';
-addpath('C:\Fiji.app\scripts',[DropboxPath,'BeadSeq Code'],[DropboxPath,'BeadSeq Code\find_roi'],[DropboxPath,'Pucks\PipelineFunctions']);
+BeadseqCodePath='C:\Users\sgr\Analysis\SlideseqCode\BeadSeq Code';
+PipelineFunctionPath='C:\Users\sgr\Analysis\SlideseqCode\PipelineFunctions';
+addpath('C:\Fiji.app\scripts',BeadseqCodePath,[BeadseqCodePath,'\find_roi'],PipelineFunctionPath);
 javaaddpath('C:\Program Files\MATLAB\R2017a\java\mij.jar');
 javaaddpath(which('MatlabGarbageCollector.jar'))
 %We assume that the nd2s have been exported to tiffs in the format:
@@ -77,7 +78,7 @@ AnalogizerType="NMFReg";
 %Cerebellum is 1. Hippocampus is 2.
 DropseqDGEPaths={'\\iodine-cifs\broad_macosko\data\clusters\atlas_ica\F_GRCm38.81.P60Cerebellum_ALT','\\iodine-cifs\broad_macosko\data\clusters\atlas_ica\F_GRCm38.81.P60Hippocampus'};
 DropseqClusterPaths={'\\iodine-cifs\broad_macosko\data\clusters\atlas_ica\F_GRCm38.81.P60Cerebellum_ALT\assign\F_GRCm38.81.P60Cerebellum_ALT.cluster.assign.RDS','\\iodine-cifs\broad_macosko\data\clusters\atlas_ica\F_GRCm38.81.P60Hippocampus\assign\F_GRCm38.81.P60Hippocampus.cluster.assign.RDS'};
-DropseqMeanAndVariancePath=fullfile(DropboxPath,'BeadSeq Code\DGEMeansAndVariances');
+DropseqMeanAndVariancePath=fullfile(BeadseqCodePath,'DGEMeansAndVariances');
 
 NumPar=20;
 
@@ -105,8 +106,8 @@ tnumMapping=[1,2,3,4,1,2,3,4,5,6,1,2,3,4,5,6,7,8,9,10];
 PucksToAnalyze=[1,2,3,4,5,6,7,8,9,10,11,12,15,16,17,18,19,20,21,22,23,24,25,26]; %These are the values of xy from the .nd2 file that will be analyzed.
 %Note that the order in PuckNames should match the order in the .nd2 file.
 PuckNames={'Puck_180728_1','Puck_180728_2','Puck_180728_3','Puck_180728_4','Puck_180728_5','Puck_180728_6','Puck_180728_7','Puck_180728_8','Puck_180728_9','Puck_180728_10','Puck_180728_11','Puck_180728_12','Puck_180728_13','Puck_180728_14','Puck_180728_15','Puck_180728_16','Puck_180728_17','Puck_180728_18','Puck_180728_19','Puck_180728_20','Puck_180728_21','Puck_180728_22','Puck_180728_23','Puck_180728_24'}; %give the names of the pucks
-OutputFolderRoot=[DropboxPath,'Pucks\Barcodes\'];%\Puck_180106_1\','C:\Users\sgr\Dropbox (MIT)\Project - SlideSeq\Pucks\Barcodes\Puck_180106_2\','C:\Users\sgr\Dropbox (MIT)\Project - SlideSeq\Pucks\Barcodes\Puck_180106_3\','C:\Users\sgr\Dropbox (MIT)\Project - SlideSeq\Pucks\Barcodes\Puck_180106_4\'};
-IlluminaFolderRoot='D:\Slideseq\Illumina\';
+OutputFolderRoot='\\iodine-cifs\broad_macosko\data\Slideseq\Barcodes\';%\Puck_180106_1\','C:\Users\sgr\Dropbox (MIT)\Project - SlideSeq\Pucks\Barcodes\Puck_180106_2\','C:\Users\sgr\Dropbox (MIT)\Project - SlideSeq\Pucks\Barcodes\Puck_180106_3\','C:\Users\sgr\Dropbox (MIT)\Project - SlideSeq\Pucks\Barcodes\Puck_180106_4\'};
+IlluminaFolderRoot='\\iodine-cifs\broad_macosko\data\Slideseq\Illumina\';
 
 %SequencingFileName={'fei_S3_L001_R1_001.fastq'};
 ImageSize=6030; %The image registration will output images that are not all the exact same size, because of stitching. So find_roi_stack_fun crops the images a bit. We can choose this value to be something like 0.95 * the size of the images. So e.g. for 3x3 it should be 0.95*2048*(2*(2/3)+1) = 4500. For 7x7 it is 0.95*2048*(1+6*2/3)=9728. I used 10400 previously though.
@@ -381,7 +382,7 @@ for puck=1:length(PuckNames)
                 otherwise
                     assert(1==0)
             end
-            fwrite(commandfile,['C: & cd "',DropboxPath,'BeadSeq Code" & "',PythonPath,'" autoNMFreg_windows.py -da \\iodine-cifs\broad_macosko\data\NMFreg\data -dp "',fullfile(OutputFolders{puck},BeadMappingFile),'" -t ',tissuetype,' -c ',num2str(thisbeadcutoff),' -dge MappedDGEForR -bl BeadLocationsForR']);            
+            fwrite(commandfile,['C: & cd "',BeadseqCodePath,'" & "',PythonPath,'" autoNMFreg_windows.py -da \\iodine-cifs\broad_macosko\data\NMFreg\data -dp "',fullfile(OutputFolders{puck},BeadMappingFile),'" -t ',tissuetype,' -c ',num2str(thisbeadcutoff),' -dge MappedDGEForR -bl BeadLocationsForR']);            
         end
         fclose(commandfile);
         !C:/Analogizer
@@ -400,17 +401,17 @@ for puck=1:length(PuckNames)
     end
     switch RunAnalogizer(puck)
         case 1
-            copyfile(fullfile(DropboxPath,'BeadSeq Code\DGEMeansAndVariances\CerebellumVarianceByDropseqCluster.csv'),fullfile(MappingOutputFolder,'AnalogizerVarianceByDropseqCluster.csv'));
-            copyfile(fullfile(DropboxPath,'BeadSeq Code\DGEMeansAndVariances\CerebellumExpressionByDropseqCluster.csv'),fullfile(MappingOutputFolder,'AnalogizerExpressionByDropseqCluster.csv'));
+            copyfile(fullfile(BeadseqCodePath,'\DGEMeansAndVariances\CerebellumVarianceByDropseqCluster.csv'),fullfile(MappingOutputFolder,'AnalogizerVarianceByDropseqCluster.csv'));
+            copyfile(fullfile(BeadseqCodePath,'\DGEMeansAndVariances\CerebellumExpressionByDropseqCluster.csv'),fullfile(MappingOutputFolder,'AnalogizerExpressionByDropseqCluster.csv'));
         case 2
-            copyfile(fullfile(DropboxPath,'BeadSeq Code\DGEMeansAndVariances\HippocampusVarianceByDropseqCluster.csv'),fullfile(MappingOutputFolder,'AnalogizerVarianceByDropseqCluster.csv'));
-            copyfile(fullfile(DropboxPath,'BeadSeq Code\DGEMeansAndVariances\HippocampusExpressionByDropseqCluster.csv'),fullfile(MappingOutputFolder,'AnalogizerExpressionByDropseqCluster.csv'));
+            copyfile(fullfile(BeadseqCodePath,'\DGEMeansAndVariances\HippocampusVarianceByDropseqCluster.csv'),fullfile(MappingOutputFolder,'AnalogizerVarianceByDropseqCluster.csv'));
+            copyfile(fullfile(BeadseqCodePath,'\DGEMeansAndVariances\HippocampusExpressionByDropseqCluster.csv'),fullfile(MappingOutputFolder,'AnalogizerExpressionByDropseqCluster.csv'));
         case 3
-            copyfile(fullfile(DropboxPath,'BeadSeq Code\DGEMeansAndVariances\FrontalCortexVarianceByDropseqCluster.csv'),fullfile(MappingOutputFolder,'AnalogizerVarianceByDropseqCluster.csv'));
-            copyfile(fullfile(DropboxPath,'BeadSeq Code\DGEMeansAndVariances\FrontalCortexExpressionByDropseqCluster.csv'),fullfile(MappingOutputFolder,'AnalogizerExpressionByDropseqCluster.csv'));
+            copyfile(fullfile(BeadseqCodePath,'\DGEMeansAndVariances\FrontalCortexVarianceByDropseqCluster.csv'),fullfile(MappingOutputFolder,'AnalogizerVarianceByDropseqCluster.csv'));
+            copyfile(fullfile(BeadseqCodePath,'\DGEMeansAndVariances\FrontalCortexExpressionByDropseqCluster.csv'),fullfile(MappingOutputFolder,'AnalogizerExpressionByDropseqCluster.csv'));
         case 4
-            copyfile(fullfile(DropboxPath,'BeadSeq Code\DGEMeansAndVariances\PosteriorCortexVarianceByDropseqCluster.csv'),fullfile(MappingOutputFolder,'AnalogizerVarianceByDropseqCluster.csv'));
-            copyfile(fullfile(DropboxPath,'BeadSeq Code\DGEMeansAndVariances\PosteriorCortexExpressionByDropseqCluster.csv'),fullfile(MappingOutputFolder,'AnalogizerExpressionByDropseqCluster.csv'));
+            copyfile(fullfile(BeadseqCodePath,'\DGEMeansAndVariances\PosteriorCortexVarianceByDropseqCluster.csv'),fullfile(MappingOutputFolder,'AnalogizerVarianceByDropseqCluster.csv'));
+            copyfile(fullfile(BeadseqCodePath,'\DGEMeansAndVariances\PosteriorCortexExpressionByDropseqCluster.csv'),fullfile(MappingOutputFolder,'AnalogizerExpressionByDropseqCluster.csv'));
 
     
     end
