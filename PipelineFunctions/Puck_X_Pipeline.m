@@ -54,6 +54,7 @@ PythonPath='C:\Users\sgr\AppData\Local\Programs\Python\Python37\python.exe';
 BeadseqCodePath='C:\Users\sgr\Analysis\SlideseqCode\BeadSeq Code';
 PipelineFunctionPath='C:\Users\sgr\Analysis\SlideseqCode\PipelineFunctions';
 addpath('C:\Fiji.app\scripts',BeadseqCodePath,[BeadseqCodePath,'\find_roi'],PipelineFunctionPath);
+addpath([BeadseqCodePath,'\find_roi\helpers']);
 javaaddpath('C:\Program Files\MATLAB\R2017a\java\mij.jar');
 javaaddpath(which('MatlabGarbageCollector.jar'))
 %We assume that the nd2s have been exported to tiffs in the format:

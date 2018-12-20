@@ -12,8 +12,8 @@ function find_roi_stack_fun(BaseName,suffix,ImageSize,varargin)
 
 delete(gcp('nocreate'));
 clearvars -except f1s d1s database2 BaseName suffix ImageSize varargin;
-run('C:\Users\sgr\Dropbox (MIT)\Project - SlideSeq\BeadSeq Code\find_roi\helpers\vlfeat-0.9.20\toolbox\vl_setup.m');
-addpath('C:\Users\sgr\Dropbox (MIT)\Project - SlideSeq\BeadSeq Code\find_roi\helpers');
+run('C:\Users\sgr\Analysis\SlideseqCode\BeadSeq Code\find_roi\helpers\vlfeat-0.9.21-bin\vlfeat-0.9.21\toolbox\vl_setup.m');
+addpath('C:\Users\sgr\Analysis\SlideseqCode\BeadSeq Code\find_roi\helpers');
 
 displayfigs=0;
 
