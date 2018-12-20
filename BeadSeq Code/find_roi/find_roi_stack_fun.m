@@ -8,12 +8,18 @@ function find_roi_stack_fun(BaseName,suffix,ImageSize,varargin)
 
 %Compared to 170818, I am changing parameters to try to get a better fit.
 
+BeadseqCodePath='';
+index = find(cellfun(@(x) (all(ischar(x)) || isstring(x))&&(string(x)=="BeadseqCodePath"), varargin, 'UniformOutput', 1));
+if ~isempty(index)
+    BeadseqCodePath=varargin{index+1};
+end
+
 
 
 delete(gcp('nocreate'));
 clearvars -except f1s d1s database2 BaseName suffix ImageSize varargin;
-run('C:\Users\sgr\Analysis\SlideseqCode\BeadSeq Code\find_roi\helpers\vlfeat-0.9.21-bin\vlfeat-0.9.21\toolbox\vl_setup.m');
-addpath('C:\Users\sgr\Analysis\SlideseqCode\BeadSeq Code\find_roi\helpers');
+run(fullfile(BeadseqCodePath,'find_roi\helpers\vlfeat-0.9.21-bin\vlfeat-0.9.21\toolbox\vl_setup.m'));
+addpath(fullfile(BeadseqCodePath,'find_roi\helpers'));
 
 displayfigs=0;
 
@@ -112,7 +118,7 @@ for mm=2:l
     end
 end
 pool=parpool(20);
-addAttachedFiles(pool,'C:\Users\sgr\Dropbox (MIT)\Project - SlideSeq\BeadSeq Code\find_roi\helpers\fit_isometry.m');
+addAttachedFiles(pool,fullfile(BeadseqCodePath,'find_roi\helpers\fit_isometry.m'));
 
 parfor mm=2:l
 %for mm=12

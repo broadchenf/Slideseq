@@ -200,7 +200,7 @@ for puck=1:length(PuckNames) %note we are trying to run this overnight without p
     %We now send the command to do the registration with find_roi
     BaseName=[ProcessedImageFolders{puck},PuckNames{puck},'_Ligation_'];
     Suffix='_Stitched';
-    find_roi_stack_fun(BaseName,Suffix,ImageSize,'PixelCutoff',PixelCutoffRegistration,'XCorrBounds',XCorrBounds,'RegisterColorChannels',1,'NumPar',NumPar);
+    find_roi_stack_fun(BaseName,Suffix,ImageSize,'PixelCutoff',PixelCutoffRegistration,'XCorrBounds',XCorrBounds,'RegisterColorChannels',1,'NumPar',NumPar,'BeadseqCodePath',BeadseqCodePath);
 %The outputted files are of the form 
 %[BaseName,int2str(mm),' channel ',int2str(k),suffix,' transform.tif']
 end
