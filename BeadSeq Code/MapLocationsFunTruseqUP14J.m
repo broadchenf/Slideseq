@@ -83,7 +83,7 @@ save([OutputDirectory,'Base5Barcodes'],'Base5Barcodes');
     NumNearestBarcodescell={};
     delete(gcp('nocreate'))
     pool=parpool(NumPar);
-    
+    %disp('Starting Illumina parfor loop')
     parfor parnum=1:NumPar %this could maybe be accelerated by sorting the barcodes?
         localNegBarcodes=reshapedNegBarcodes(:,parnum);
         localBase5Barcodes=reshapedBase5Barcodes(:,parnum);

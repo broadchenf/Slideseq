@@ -62,7 +62,7 @@ javaaddpath(which('MatlabGarbageCollector.jar'))
 %We convert the files to a final output format:
 %Puck85 Ligation X Position AB
 %BeadType="180402"; for 14bp barcodes from 180402 beads
-BeadType="ReversePhase";
+BeadType="180402";
 
 RenameFiles=1;
 
@@ -98,14 +98,14 @@ BarcodeSequence=[1,2,3,4,0,5,0,6,0,7,8,9,10,11,0,12,0,13,0,14];
 FolderWithRawTiffs='\\169.254.130.66\Slideseq\Raw\180821 - Pucks 180821-X\';
 FolderWithProcessedTiffs='\\169.254.130.66\Slideseq\Processed\';
 tmpfolder='D:\pucktmp\';
-IndexFiles={'primers t through t-4','primers t-2 through t-4','primers up through up-4 then t-2 through t-4'}; %give the prefixes of each of the files. The next character after should be 't',
-LigationToIndexFileMapping=[1,1,1,1,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,3];%for ligations 1:20, which file number are the ligations found in?
+IndexFiles={'Primers T through T-4','Primers UP through UP-4'}; %give the prefixes of each of the files. The next character after should be 't',
+LigationToIndexFileMapping=[1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2];%for ligations 1:20, which file number are the ligations found in?
 %for ligations 1:20, which value of t are they, within their file? This
 %could also be deduced from the LigationToIndexFileMapping array
-tnumMapping=[1,2,3,4,1,2,3,4,5,6,1,2,3,4,5,6,7,8,9,10];
+tnumMapping=[1,2,3,4,5,6,7,8,9,10,1,2,3,4,5,6,7,8,9,10];
 PucksToAnalyze=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32]; %These are the values of xy from the .nd2 file that will be analyzed.
 %Note that the order in PuckNames should match the order in the .nd2 file.
-PuckNames={'Puck_180821_1','Puck_180821_2','Puck_180821_3','Puck_180821_4','Puck_180821_5','Puck_180821_6','Puck_180821_7','Puck_180821_8','Puck_180821_9','Puck_180821_10','Puck_180821_11','Puck_180821_12','Puck_180821_13','Puck_180821_14','Puck_180821_15','Puck_180821_16','Puck_180821_17','Puck_180821_18','Puck_180821_19','Puck_180821_20','Puck_180821_21','Puck_180821_22','Puck_180821_23','Puck_180821_24','Puck_180821_25','Puck_180821_26','Puck_180821_27','Puck_180821_28','Puck_180821_29','Puck_180821_30'}; %give the names of the pucks
+PuckNames={'Puck_180821_16','Puck_180821_17','Puck_180821_18','Puck_180821_19'}; %give the names of the pucks
 OutputFolderRoot='\\iodine-cifs\broad_macosko\data\Slideseq\Barcodes\';%\Puck_180106_1\','C:\Users\sgr\Dropbox (MIT)\Project - SlideSeq\Pucks\Barcodes\Puck_180106_2\','C:\Users\sgr\Dropbox (MIT)\Project - SlideSeq\Pucks\Barcodes\Puck_180106_3\','C:\Users\sgr\Dropbox (MIT)\Project - SlideSeq\Pucks\Barcodes\Puck_180106_4\'};
 IlluminaFolderRoot='\\iodine-cifs\broad_macosko\data\Slideseq\Illumina\';
 
