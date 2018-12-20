@@ -8,16 +8,18 @@ function find_roi_stack_fun(BaseName,suffix,ImageSize,varargin)
 
 %Compared to 170818, I am changing parameters to try to get a better fit.
 
+
+
+
+delete(gcp('nocreate'));
+clearvars -except f1s d1s database2 BaseName suffix ImageSize varargin;
+
 BeadseqCodePath='';
 index = find(cellfun(@(x) (all(ischar(x)) || isstring(x))&&(string(x)=="BeadseqCodePath"), varargin, 'UniformOutput', 1));
 if ~isempty(index)
     BeadseqCodePath=varargin{index+1};
 end
 
-
-
-delete(gcp('nocreate'));
-clearvars -except f1s d1s database2 BaseName suffix ImageSize varargin;
 run(fullfile(BeadseqCodePath,'find_roi\helpers\vlfeat-0.9.21-bin\vlfeat-0.9.21\toolbox\vl_setup.m'));
 addpath(fullfile(BeadseqCodePath,'find_roi\helpers'));
 
