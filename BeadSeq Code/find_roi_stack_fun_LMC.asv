@@ -68,7 +68,7 @@ end
 
 
 for k=1:channelnum
-    mapOrigstack(:,:,k)=imread([BaseName,pad(num2str(1),2,'left','0'),suffix,'.tif'],'index',k); %,'PixelRegion',{[1,ImageSize],[1,ImageSize]}
+    mapOrigstack(:,:,k)=imread([BaseName,pad(num2str(1),2,'left','0'),suffix,'.tif'],'index',k,'PixelRegion',{[1,ImageSize],[1,ImageSize]});
 end
 
 if RegisterColorChannels
@@ -88,7 +88,7 @@ end
 for mm=2:l
     display(strcat('Loading file for ligation ',num2str(mm)))
     for k=1:channelnum
-        queryOrigstack(:,:,k,mm)=imread([BaseName,pad(num2str(mm),2,'left','0'),suffix,'.tif'],'index',k);%,'PixelRegion',{[1,ImageSize],[1,ImageSize]}
+        queryOrigstack(:,:,k,mm)=imread([BaseName,pad(num2str(mm),2,'left','0'),suffix,'.tif'],'index',k,'PixelRegion'),{[1,ImageSize],[1,ImageSize]});
     end
 end
 if RegisterColorChannels
@@ -106,8 +106,8 @@ end
 pool=parpool(NumPar);
 %addAttachedFiles(pool,'D:\Dropbox\Insitubiology Dropbox\insitubiology\Project - SlideSeq\BeadSeq Code\find_roi\helpers\fit_isometry.m');
 
-%parfor mm=2:l
-for mm=2:l
+parfor mm=2:l
+%for mm=12
     %queryOrig=max(queryOrigstack(:,:,:,mm),[],3);
     query=max(querystack(:,:,:,mm),[],3);
     
