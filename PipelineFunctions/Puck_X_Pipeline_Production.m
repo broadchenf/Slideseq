@@ -51,12 +51,10 @@ clear all
 close all
 
 PythonPath='C:\Users\sgr\AppData\Local\Programs\Python\Python37\python.exe';
-BeadseqCodePath='C:\Slideseq\SlideseqCode\BeadSeq Code';
-PipelineFunctionPath='C:\Slideseq\SlideseqCode\PipelineFunctions';
-addpath('C:\Fiji.app\scripts',BeadseqCodePath,[BeadseqCodePath,'\find_roi'],PipelineFunctionPath);
+BeadseqCodePath='C:\Users\sgr\Analysis\SlideseqCode\BeadSeq Code';
+PipelineFunctionPath='C:\Users\sgr\Analysis\SlideseqCode\PipelineFunctions';
+addpath(BeadseqCodePath,[BeadseqCodePath,'\find_roi'],PipelineFunctionPath);
 addpath([BeadseqCodePath,'\find_roi\helpers']);
-javaaddpath('C:\Program Files\MATLAB\R2017a\java\mij.jar');
-javaaddpath(which('MatlabGarbageCollector.jar'))
 %We assume that the nd2s have been exported to tiffs in the format:
 %DescriptiveNametLYX, where DescriptiveName refers to one run of the microscope,  Y is a letter and X is a number, and L is the
 %name of the ligation within that DescriptiveName file series.
@@ -98,7 +96,6 @@ BarcodeSequence=[1,2,3,4,0,5,0,6,0,7,8,9,10,11,0,12,0,13,0,14];
 %BarcodeSequence=[1,2,3,4,0,5,0,6,7,8,9,10,0,11,0,12,0,13]; %this determines how the numerical barcode is built from the ligations. Basically, the constant bases should be 0, and all other bases should be consecutive
 FolderWithRawTiffs='\\169.254.130.66\Slideseq\Raw\180821 - Pucks 180821-X\';
 FolderWithProcessedTiffs='\\169.254.130.66\Slideseq\Processed\';
-tmpfolder='D:\pucktmp\';
 IndexFiles={'primers t through t-4','primers t-2 through t-4','primers up through up-4 then t-2 through t-4'}; %give the prefixes of each of the files. The next character after should be 't',
 LigationToIndexFileMapping=[1,1,1,1,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,3];%for ligations 1:20, which file number are the ligations found in?
 %for ligations 1:20, which value of t are they, within their file? This
@@ -117,6 +114,8 @@ RegisterColorChannels=1;
 BeadZeroThreshold=1;
 PixelCutoffRegistration=400;
 PixelCutoffBasecalling=300;
+DropBases=1;
+BeadSizeCutoff=25;
 
 %The illumina barcodes are assumed to be 13 bases long, consisting of the
 %first 6 J bases and then the last 7 J bases. If the barcodes you are using
@@ -157,7 +156,6 @@ display('Renaming Files');
     
 %% Move files
 for pucknum=1:length(PuckNames)
-    mkdir([tmpfolder,PuckNames{pucknum}]);
     puck=PucksToAnalyze(pucknum);
     for ligation=1:NumLigations
         tnum=tnumMapping(ligation);
@@ -180,13 +178,7 @@ for pucknum=1:length(PuckNames)
         end
             
             outputfilename=[ProcessedImageFolders{pucknum},PuckNames{pucknum},'_Ligation_',pad(num2str(ligation),2,'left','0'),'_Stitched.tif'];
-%                outputfilename=[OutputFolders{puck},PuckNames{puck},'_Ligation_',pad(num2str(ligation),2,'left','0'),'_Position_X_',pad(num2str(xpositionindex),2,'left','0'),'_Y_',pad(num2str(yposition),2,'left','0'),'.tif'];
-        %command=['inputfile="',replace(filename,'\','\\'),'" outputfile="',replace(outputfilename,'\','\\'),'"'];
-            commandfile=fopen('C:\FijiCommand.cmd','w');
-            fwrite(commandfile,strcat('C:\Fiji.app\ImageJ-win64.exe --headless --console -macro SlideseqSave.ijm "',replace(filename,'\','\\'),'"'));
-            fclose(commandfile);
-            !C:/FijiCommand
-            movefile('C:\PuckOutputTmp.tif',outputfilename)
+            movefile(filename,outputfilename)
     end
 end
 end
@@ -222,7 +214,7 @@ for puck=1:length(PuckNames) %note we are trying to run this overnight without p
     BaseName=[ProcessedImageFolders{puck},PuckNames{puck},'_Ligation_'];
     suffix='_Stitched';
     disp(['Beginning basecalling for puck number ',num2str(puck)])
-	[Bead BeadImage]=BeadSeqFun6(BaseName,suffix,OutputFolders{puck},BeadZeroThreshold,BarcodeSequence,NumPar,NumLigations,PuckNames{puck},EnforceBaseBalance,BaseBalanceTolerance,'PixelCutoff',PixelCutoffBasecalling);
+	[Bead BeadImage]=BeadSeqFun6(BaseName,suffix,OutputFolders{puck},BeadZeroThreshold,BarcodeSequence,NumPar,NumLigations,PuckNames{puck},EnforceBaseBalance,BaseBalanceTolerance,'PixelCutoff',PixelCutoffBasecalling,'DropBases',DropBases,'BeadSizeThreshold',BeadSizeCutoff);
 %The outputted files are of the form 
 %[BaseName,int2str(mm),' channel ',int2str(k),suffix,' transform.tif']
 end
