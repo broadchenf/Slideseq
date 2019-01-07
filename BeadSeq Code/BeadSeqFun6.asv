@@ -22,10 +22,12 @@ function [Bead BeadImage]=BeadSeqFun2(BaseName, suffix, OutputFolder,BeadZeroThr
     end
 
     BeadSizeThreshold=30;
-    index = find(cellfun(@(x) (all(ischar(x)) || isstring(x))&&(string(x)=="BeadSizeThreshold"), varargin, 'UniformOutput', 1));
+    index = find(cellfun(@(x) (all(ischar(x)) || isstring(x))&&(string(x)=="DropBases"), varargin, 'UniformOutput', 1));
     if ~isempty(index)
-        BeadSizeThreshold=varargin{index+1};
+        DropBases=varargin{index+1};
     end
+
+BeadSizeThreshold=30; %beads are clusters of at least 40 identical barcodes with no zeros.
 
     
     

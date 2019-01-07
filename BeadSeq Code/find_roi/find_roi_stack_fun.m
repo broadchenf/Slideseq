@@ -20,6 +20,12 @@ if ~isempty(index)
     BeadseqCodePath=varargin{index+1};
 end
 
+NumPar=20;
+index = find(cellfun(@(x) (all(ischar(x)) || isstring(x))&&(string(x)=="NumPar"), varargin, 'UniformOutput', 1));
+if ~isempty(index)
+    NumPar=varargin{index+1};
+end
+
 run(fullfile(BeadseqCodePath,'find_roi\helpers\vlfeat-0.9.21-bin\vlfeat-0.9.21\toolbox\vl_setup.m'));
 addpath(fullfile(BeadseqCodePath,'find_roi\helpers'));
 
@@ -119,7 +125,7 @@ for mm=2:l
         querystack(:,:,k,mm) = im2single(imadjust(queryOrigstack(:,:,k,mm)));
     end
 end
-pool=parpool(20);
+pool=parpool(NumPar);
 addAttachedFiles(pool,fullfile(BeadseqCodePath,'find_roi\helpers\fit_isometry.m'));
 
 parfor mm=2:l
