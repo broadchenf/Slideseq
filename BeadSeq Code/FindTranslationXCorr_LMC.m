@@ -17,7 +17,9 @@ end
 for j=2:size(ImageIn,3)
     imBinChannel=ImageIn(b(1):b(2),b(3):b(4),j)>median(median(ImageIn(:,:,j)));
     Cor=xcorr2(uint8(imBinMap),uint8(imBinChannel));
-    [y,x]=ind2sub(size(Cor),find(Cor(:)==max(Cor(:))));
+    [ssr,snd]=max(Cor(:));
+    [y,x]=ind2sub(size(Cor),snd);
+    %[y,x]=ind2sub(size(Cor),find(Cor(:)==max(Cor(:))));
     offset=[-((b(4)-b(3)+1-x)),-(b(2)-b(1)+1-y)]
 %    figure(8)
 %    imshowpair(ImageIn(b(1):b(2),b(3):b(4),1)>300,ImageIn(b(1):b(2),b(3):b(4),j)>300)

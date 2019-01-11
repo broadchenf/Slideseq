@@ -189,7 +189,7 @@ end
 
 display('Image Registration')
 
-for puck=1:length(PuckNames) %note we are trying to run this overnight without parfor, because we can't figure out why it keeps crashing, and it only crashes for large sized images, and only on puck 8_7
+for puck=2:length(PuckNames) %note we are trying to run this overnight without parfor, because we can't figure out why it keeps crashing, and it only crashes for large sized images, and only on puck 8_7
     display(['Beginning registration on puck number ',num2str(puck)])
     %We now send the command to do the registration with find_roi
     BaseName=[ProcessedImageFolders{puck},PuckNames{puck},'_Ligation_'];
@@ -211,12 +211,12 @@ display('Base Calling')
 %c=clock;
 %starttimereadable=[num2str(c(2)),'-',num2str(c(3)),'_',pad(num2str(c(4)),2,'left','0'),pad(num2str(c(5)),2,'left','0')];
 
-for puck=1:length(PuckNames) %note we are trying to run this overnight without parfor, because we can't figure out why it keeps crashing, and it only crashes for large sized images, and only on puck 8_7
+for puck=2:length(PuckNames) %note we are trying to run this overnight without parfor, because we can't figure out why it keeps crashing, and it only crashes for large sized images, and only on puck 8_7
     %We now send the command to do the registration with find_roi
     BaseName=[ProcessedImageFolders{puck},PuckNames{puck},'_Ligation_'];
     suffix='_Stitched';
     disp(['Beginning basecalling for puck number ',num2str(puck)])
-	[Bead BeadImage]=BeadSeqFun6_LMC(BaseName,suffix,OutputFolders{puck},BeadZeroThreshold,BarcodeSequence,20,NumLigations,PuckNames{puck},EnforceBaseBalance,BaseBalanceTolerance,'PixelCutoff',PixelCutoffBasecalling);
+	[Bead BeadImage]=BeadSeqFun6(BaseName,suffix,OutputFolders{puck},BeadZeroThreshold,BarcodeSequence,20,NumLigations,PuckNames{puck},EnforceBaseBalance,BaseBalanceTolerance,'PixelCutoff',PixelCutoffBasecalling);
 %The outputted files are of the form 
 %[BaseName,int2str(mm),' channel ',int2str(k),suffix,' transform.tif']
 end

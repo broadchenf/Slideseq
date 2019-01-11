@@ -33,7 +33,7 @@ if ~isempty(index)
     channelnum=varargin{index+1};
 end
 
-NumPar=20; %number of channels ligations?
+NumPar=10; %number of channels ligations?
 index = find(cellfun(@(x) (all(ischar(x)) || isstring(x))&&(string(x)=="NumPar"), varargin, 'UniformOutput', 1));
 if ~isempty(index)
     NumPar=varargin{index+1};
