@@ -148,7 +148,7 @@ OutputFolders={};
 for puck=1:length(PuckNames)
     ProcessedImageFolders{puck}=[FolderWithProcessedTiffs,PuckNames{puck},'\'];
     mkdir([FolderWithProcessedTiffs,PuckNames{puck}]);
-    OutputFolders{puck}=[OutputFolderRoot,PuckNames{puck},'\'];
+    OutputFolders{puck}=[OutputFolderRoot,PuckNames{puck},'_NewBeadseqfun6\'];
     mkdir(OutputFolders{puck});    
 end
 
