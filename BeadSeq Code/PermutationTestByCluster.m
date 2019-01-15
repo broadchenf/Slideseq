@@ -24,6 +24,11 @@ function Output=PermutationTestByCluster(PuckDirectory,ClusterToAnalyze,varargin
 %"11" if it passes both.
 %'EnforceReadNumbers' will enforce that all random samples have the same number of positive as the test sample at the cost of some computational
 %time.
+    FilterByCutoff=0;
+    index = find(cellfun(@(x) (all(ischar(x)) || isstring(x))&&(string(x)=="FilterByCutoff"), varargin, 'UniformOutput', 1));
+    if ~isempty(index)
+        FilterByCutoff=varargin{index+1};
+    end
     EnforceReadNumbers=1;
     index = find(cellfun(@(x) (all(ischar(x)) || isstring(x))&&(string(x)=="EnforceReadNumbers"), varargin, 'UniformOutput', 1));
     if ~isempty(index)
@@ -57,14 +62,16 @@ function Output=PermutationTestByCluster(PuckDirectory,ClusterToAnalyze,varargin
 
     if length(ClusterToAnalyze)==1 && ClusterToAnalyze==0
         load(fullfile(PuckDirectory,BeadMappingFile,'BijectiveMapping.mat'))
-    elseif length(ClusterToAnalyze)==1 && exist(fullfile(PuckDirectory,BeadMappingFile,['Cluster_',num2str(ClusterToAnalyze),'_UniqueMappedBeads.mat']))
+    elseif FilterByCutoff==0 && length(ClusterToAnalyze)==1 && exist(fullfile(PuckDirectory,BeadMappingFile,['Cluster_',num2str(ClusterToAnalyze),'_UniqueMappedBeads.mat']))
         load(fullfile(PuckDirectory,BeadMappingFile,['Cluster_',num2str(ClusterToAnalyze),'_UniqueMappedBeads.mat']));
         UniqueMappedDGE=ClusterUniqueMappedDGE;
         UniqueMappedBeads=ClusterUniqueMappedBeads;
         UniqueMappedIlluminaBarcodes=ClusterUniqueMappedIlluminaBarcodes;
         clear ClusterUniqueMappedDGE ClusterUniqueMappedBeads ClusterUniqueMappedIlluminaBarcodes
-    elseif length(ClusterToAnalyze)>1 || ~exist(fullfile(PuckDirectory,BeadMappingFile,['Cluster_',num2str(ClusterToAnalyze),'_UniqueMappedBeads.mat']))
-        [UniqueMappedDGE,UniqueMappedBeads,UniqueMappedIlluminaBarcodes,GeneNames]=DGEByCluster(PuckDirectory,ClusterToAnalyze,BeadMappingFile);
+    elseif FilterByCutoff==0
+        [UniqueMappedDGE,UniqueMappedBeads,UniqueMappedIlluminaBarcodes,GeneNames]=DGEByCluster(PuckDirectory,ClusterToAnalyze,'BeadMappingFile',BeadMappingFile);
+    elseif FilterByCutoff>0
+        [UniqueMappedDGE,UniqueMappedBeads,UniqueMappedIlluminaBarcodes,GeneNames]=DGEByCutoff(PuckDirectory,ClusterToAnalyze,FilterByCutoff,'BeadMappingFile',BeadMappingFile);        
     end
     SignificanceOutputFile=fullfile(PuckDirectory,BeadMappingFile,['Cluster_',num2str(ClusterToAnalyze),'_SignificanceOutput.mat']);
     if FilterGenes==1
