@@ -270,7 +270,7 @@ if CropImage
             continue
         end
         load(fullfile(MappingOutputFolder,'BijectiveMapping.mat'))
-        image=PlotGeneFromName('Malat1',GeneNames,UniqueMappedDGE,UniqueMappedBeads,'Overlay',1);
+        image=PlotGeneFromName('Malat1',GeneNames,UniqueMappedDGE,UniqueMappedBeads,'Overlay',1,'PlotStyle','Default');
         disp(['Ready to crop puck',num2str(puck)])
         h = imfreehand; %draw something 
         M = h.createMask();

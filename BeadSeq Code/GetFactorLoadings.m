@@ -1,4 +1,5 @@
-function [ClusterUniqueMappedDGE,ClusterUniqueMappedBeads,ClusterUniqueMappedIlluminaBarcodes,GeneNames, FactorWeight]=GetLoadingByCluster(PuckDirectory,varargin)
+function [FactorWeight,ClusterUniqueMappedDGE,ClusterUniqueMappedBeads,ClusterUniqueMappedIlluminaBarcodes,GeneNames]=GetFactorLoadings(PuckName,varargin)
+    PuckDirectory=GetPuckDirectory(PuckName);
 
     index = find(cellfun(@(x) (all(ischar(x)) || isstring(x))&&(string(x)=="BeadMappingFile"), varargin, 'UniformOutput', 1));
     if ~isempty(index)
@@ -12,6 +13,7 @@ function [ClusterUniqueMappedDGE,ClusterUniqueMappedBeads,ClusterUniqueMappedIll
     else
         CropSuffix='';
     end
+        
     index = find(cellfun(@(x) (all(ischar(x)) || isstring(x))&&(string(x)=="SaveOutput"), varargin, 'UniformOutput', 1));
     if ~isempty(index)
         SaveOutput=varargin{index+1};
@@ -24,7 +26,6 @@ function [ClusterUniqueMappedDGE,ClusterUniqueMappedBeads,ClusterUniqueMappedIll
     else
         Cluster=0; %Note, if cluster is specified, we subset the final DGE to the cluster(s) specified.
     end
-    
     ClusterDataOutputFile=fullfile(PuckDirectory,BeadMappingFile,['FactorWeights',CropSuffix,'.mat']);
     load(fullfile(PuckDirectory,BeadMappingFile,['BijectiveMapping',CropSuffix,'.mat']))
     ClusterPath=fullfile(PuckDirectory,BeadMappingFile,'AnalogizerClusterAssignmentsOriginal.csv');
@@ -35,8 +36,7 @@ function [ClusterUniqueMappedDGE,ClusterUniqueMappedBeads,ClusterUniqueMappedIll
     ClusterAssignments.Properties.VariableNames={'var1', 'Barcode', 'max_factor', 'Cluster'};
 
    
-    %NOTE THAT WE ARE FILTERING HERE: we have thrown out slideseq beads with
-    %<100 reads in the R program
+    %NOTE THAT WE ARE FILTERING HERE: NMFReg will have thrown out some slideseq beads.
     [C,ia,ib]=intersect(ClusterAssignments.Barcode,UniqueMappedIlluminaBarcodes);
     ClusterAssignments=ClusterAssignments(ia,:);
     ClusterUniqueMappedDGE=UniqueMappedDGE(:,ib);
@@ -65,7 +65,7 @@ function [ClusterUniqueMappedDGE,ClusterUniqueMappedBeads,ClusterUniqueMappedIll
     Hsmatrix = Hsmatrix(ia,:);
     FactorWeight=zeros(size(Hsmatrix,1),max(Assignment));
     for k=1:max(Assignment)
-        FactorWeight(:,k)  = sum(table2array(Hsmatrix(:,find(Assignment == k)+1)).^2,2);
+        FactorWeight(:,k)  = sqrt(sum(table2array(Hsmatrix(:,find(Assignment == k)+1)).^2,2));
     end
         
     if SaveOutput

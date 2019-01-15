@@ -1,6 +1,6 @@
 function BeadImage=PlotGene(GeneNum,UniqueMappedDGE,UniqueMappedBeads,varargin)
 
-    PlotStyle="Default";
+    PlotStyle="Circles";
     index = find(cellfun(@(x) (all(ischar(x)) || isstring(x))&&(string(x)=="PlotStyle"), varargin, 'UniformOutput', 1));
     if ~isempty(index)
         PlotStyle=varargin{index+1};
@@ -104,7 +104,7 @@ function BeadImage=PlotGene(GeneNum,UniqueMappedDGE,UniqueMappedBeads,varargin)
         
         if ~Normalize
             for qr=1:length(UniqueMappedBeads)
-                if MarkerSum(qr)>=1
+                if MarkerSum(qr)>0
                     rectangle('Position',[UniqueMappedBeads(qr).Locations(1),UniqueMappedBeads(qr).Locations(2),min(300,50*MarkerSum(qr)*BeadSizeFactor),min(300,50*MarkerSum(qr)*BeadSizeFactor)],...
                       'Curvature',[1,1], 'FaceColor','b')
                 end
@@ -112,7 +112,7 @@ function BeadImage=PlotGene(GeneNum,UniqueMappedDGE,UniqueMappedBeads,varargin)
             
         else
             for qr=1:length(UniqueMappedBeads)
-                if MarkerSum(qr)>=1 && TotalSum(qr)>=BeadCutoff
+                if MarkerSum(qr)>0 && TotalSum(qr)>=BeadCutoff
                     rectangle('Position',[UniqueMappedBeads(qr).Locations(1),UniqueMappedBeads(qr).Locations(2),min(300,5000*MarkerSum(qr)*BeadSizeFactor/TotalSum(qr)),min(300,5000*MarkerSum(qr)*BeadSizeFactor/TotalSum(qr))],...
                       'Curvature',[1,1], 'FaceColor','b')
                 end
@@ -124,7 +124,7 @@ function BeadImage=PlotGene(GeneNum,UniqueMappedDGE,UniqueMappedBeads,varargin)
     if PlotStyle=="Imagesc"
         PositiveBeadImage=zeros(ImageSize,ImageSize);
         for qr=1:length(UniqueMappedBeads)
-            if MarkerSum(qr)>=1
+            if MarkerSum(qr)>0
                 PositiveBeadImage(max(1,(round(UniqueMappedBeads(qr).Locations(1))-35)):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(1))+35)),max(1,(round(UniqueMappedBeads(qr).Locations(2))-35)):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(2))+35)))=PositiveBeadImage(max(1,(round(UniqueMappedBeads(qr).Locations(1))-35)):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(1))+35)),max(1,(round(UniqueMappedBeads(qr).Locations(2))-35)):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(2))+35)))+MarkerSum(qr);
 %                PositiveBeadImage(max(1,(round(UniqueMappedBeads(qr).Locations(1))-25*min(MarkerSum(qr)*BeadSizeFactor,10))):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(1))+25*min(MarkerSum(qr)*BeadSizeFactor,10))),max(1,(round(UniqueMappedBeads(qr).Locations(2))-25*min(MarkerSum(qr)*BeadSizeFactor,10))):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(2))+25*min(MarkerSum(qr)*BeadSizeFactor,10))))=PositiveBeadImage(max(1,(round(UniqueMappedBeads(qr).Locations(1))-25*min(MarkerSum(qr)*BeadSizeFactor,10))):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(1))+25*min(MarkerSum(qr)*BeadSizeFactor,10))),max(1,(round(UniqueMappedBeads(qr).Locations(2))-25*min(MarkerSum(qr)*BeadSizeFactor,10))):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(2))+25*min(MarkerSum(qr)*BeadSizeFactor,10))))+MarkerSum(qr);
             end
@@ -136,7 +136,7 @@ function BeadImage=PlotGene(GeneNum,UniqueMappedDGE,UniqueMappedBeads,varargin)
     if PlotStyle=="ImagescFeiGene"
         PositiveBeadImage={}
         for qr=1:length(UniqueMappedBeads)
-            if MarkerSum(qr)>=1
+            if MarkerSum(qr)>0
                 %PositiveBeadImage(max(1,(round(UniqueMappedBeads(qr).Locations(1))-35)):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(1))+35)),max(1,(round(UniqueMappedBeads(qr).Locations(2))-35)):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(2))+35)))=PositiveBeadImage(max(1,(round(UniqueMappedBeads(qr).Locations(1))-35)):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(1))+35)),max(1,(round(UniqueMappedBeads(qr).Locations(2))-35)):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(2))+35)))+MarkerSum(qr);
                 PositiveBeadImage{qr} = [MarkerSum(qr) UniqueMappedBeads(qr).Locations(1) UniqueMappedBeads(qr).Locations(2)];
                 %                PositiveBeadImage(max(1,(round(UniqueMappedBeads(qr).Locations(1))-25*min(MarkerSum(qr)*BeadSizeFactor,10))):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(1))+25*min(MarkerSum(qr)*BeadSizeFactor,10))),max(1,(round(UniqueMappedBeads(qr).Locations(2))-25*min(MarkerSum(qr)*BeadSizeFactor,10))):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(2))+25*min(MarkerSum(qr)*BeadSizeFactor,10))))=PositiveBeadImage(max(1,(round(UniqueMappedBeads(qr).Locations(1))-25*min(MarkerSum(qr)*BeadSizeFactor,10))):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(1))+25*min(MarkerSum(qr)*BeadSizeFactor,10))),max(1,(round(UniqueMappedBeads(qr).Locations(2))-25*min(MarkerSum(qr)*BeadSizeFactor,10))):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(2))+25*min(MarkerSum(qr)*BeadSizeFactor,10))))+MarkerSum(qr);
@@ -169,11 +169,12 @@ function BeadImage=PlotGene(GeneNum,UniqueMappedDGE,UniqueMappedBeads,varargin)
         BeadImage=filteredImage1;
 
     end
+    
     if PlotStyle=="ImagescFeiGeneNormalized"
         PositiveBeadImage={}
         TotalSum=sum(sum(UniqueMappedDGE))/size(UniqueMappedDGE,2);
         for qr=1:length(UniqueMappedBeads)
-            if MarkerSum(qr)>=1
+            if MarkerSum(qr)>0
                 MarkerSum(qr)=MarkerSum(qr)*TotalSum/sum(UniqueMappedDGE(:,qr));
                 %PositiveBeadImage(max(1,(round(UniqueMappedBeads(qr).Locations(1))-35)):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(1))+35)),max(1,(round(UniqueMappedBeads(qr).Locations(2))-35)):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(2))+35)))=PositiveBeadImage(max(1,(round(UniqueMappedBeads(qr).Locations(1))-35)):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(1))+35)),max(1,(round(UniqueMappedBeads(qr).Locations(2))-35)):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(2))+35)))+MarkerSum(qr);
                 PositiveBeadImage{qr} = [MarkerSum(qr) UniqueMappedBeads(qr).Locations(1) UniqueMappedBeads(qr).Locations(2)];
@@ -212,7 +213,7 @@ function BeadImage=PlotGene(GeneNum,UniqueMappedDGE,UniqueMappedBeads,varargin)
      if PlotStyle=="ImagescFeiCluster"
         PositiveBeadImage={}
         for qr=1:length(UniqueMappedBeads)
-            if MarkerSum(qr)>=1
+            if MarkerSum(qr)>0
                 %PositiveBeadImage(max(1,(round(UniqueMappedBeads(qr).Locations(1))-35)):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(1))+35)),max(1,(round(UniqueMappedBeads(qr).Locations(2))-35)):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(2))+35)))=PositiveBeadImage(max(1,(round(UniqueMappedBeads(qr).Locations(1))-35)):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(1))+35)),max(1,(round(UniqueMappedBeads(qr).Locations(2))-35)):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(2))+35)))+MarkerSum(qr);
                 PositiveBeadImage{qr} = [MarkerSum(qr) UniqueMappedBeads(qr).Locations(1) UniqueMappedBeads(qr).Locations(2)];
                 %                PositiveBeadImage(max(1,(round(UniqueMappedBeads(qr).Locations(1))-25*min(MarkerSum(qr)*BeadSizeFactor,10))):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(1))+25*min(MarkerSum(qr)*BeadSizeFactor,10))),max(1,(round(UniqueMappedBeads(qr).Locations(2))-25*min(MarkerSum(qr)*BeadSizeFactor,10))):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(2))+25*min(MarkerSum(qr)*BeadSizeFactor,10))))=PositiveBeadImage(max(1,(round(UniqueMappedBeads(qr).Locations(1))-25*min(MarkerSum(qr)*BeadSizeFactor,10))):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(1))+25*min(MarkerSum(qr)*BeadSizeFactor,10))),max(1,(round(UniqueMappedBeads(qr).Locations(2))-25*min(MarkerSum(qr)*BeadSizeFactor,10))):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(2))+25*min(MarkerSum(qr)*BeadSizeFactor,10))))+MarkerSum(qr);
@@ -244,7 +245,7 @@ function BeadImage=PlotGene(GeneNum,UniqueMappedDGE,UniqueMappedBeads,varargin)
      if PlotStyle=="ImagescFei"
         PositiveBeadImage={}
         for qr=1:length(UniqueMappedBeads)
-            if MarkerSum(qr)>=1
+            if MarkerSum(qr)>0
                 %PositiveBeadImage(max(1,(round(UniqueMappedBeads(qr).Locations(1))-35)):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(1))+35)),max(1,(round(UniqueMappedBeads(qr).Locations(2))-35)):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(2))+35)))=PositiveBeadImage(max(1,(round(UniqueMappedBeads(qr).Locations(1))-35)):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(1))+35)),max(1,(round(UniqueMappedBeads(qr).Locations(2))-35)):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(2))+35)))+MarkerSum(qr);
                 PositiveBeadImage{qr} = [MarkerSum(qr) UniqueMappedBeads(qr).Locations(1) UniqueMappedBeads(qr).Locations(2)];
                 %                PositiveBeadImage(max(1,(round(UniqueMappedBeads(qr).Locations(1))-25*min(MarkerSum(qr)*BeadSizeFactor,10))):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(1))+25*min(MarkerSum(qr)*BeadSizeFactor,10))),max(1,(round(UniqueMappedBeads(qr).Locations(2))-25*min(MarkerSum(qr)*BeadSizeFactor,10))):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(2))+25*min(MarkerSum(qr)*BeadSizeFactor,10))))=PositiveBeadImage(max(1,(round(UniqueMappedBeads(qr).Locations(1))-25*min(MarkerSum(qr)*BeadSizeFactor,10))):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(1))+25*min(MarkerSum(qr)*BeadSizeFactor,10))),max(1,(round(UniqueMappedBeads(qr).Locations(2))-25*min(MarkerSum(qr)*BeadSizeFactor,10))):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(2))+25*min(MarkerSum(qr)*BeadSizeFactor,10))))+MarkerSum(qr);
@@ -264,7 +265,7 @@ function BeadImage=PlotGene(GeneNum,UniqueMappedDGE,UniqueMappedBeads,varargin)
      if PlotStyle=="ImagescClusterByLoading"
         PositiveBeadImage={}
         for qr=1:length(UniqueMappedBeads)
-            if MarkerSum(qr)>=1
+            if MarkerSum(qr)>0
 
                 %PositiveBeadImage(max(1,(round(UniqueMappedBeads(qr).Locations(1))-35)):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(1))+35)),max(1,(round(UniqueMappedBeads(qr).Locations(2))-35)):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(2))+35)))=PositiveBeadImage(max(1,(round(UniqueMappedBeads(qr).Locations(1))-35)):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(1))+35)),max(1,(round(UniqueMappedBeads(qr).Locations(2))-35)):min(ImageSize,(round(UniqueMappedBeads(qr).Locations(2))+35)))+MarkerSum(qr);
                 PositiveBeadImage{qr} = [MarkerSum(qr)*Loadings(qr) UniqueMappedBeads(qr).Locations(1) UniqueMappedBeads(qr).Locations(2)];
@@ -299,7 +300,7 @@ function BeadImage=PlotGene(GeneNum,UniqueMappedDGE,UniqueMappedBeads,varargin)
     if PlotStyle=="Default"
     PositiveBeadImage=false(ImageSize,ImageSize);
     for qr=1:length(UniqueMappedBeads)
-        if MarkerSum(qr)>=1
+        if MarkerSum(qr)>0
             PositiveBeadImage(UniqueMappedBeads(qr).Pixels)=true;
         end
     end
@@ -307,7 +308,7 @@ function BeadImage=PlotGene(GeneNum,UniqueMappedDGE,UniqueMappedBeads,varargin)
     if Overlay
         NegBeadImage=false(ImageSize,ImageSize);
         for qr=1:length(UniqueMappedBeads)
-            if ~MarkerSum(qr)>=1 && floor(qr/OverlayDownsample)==qr/OverlayDownsample
+            if ~MarkerSum(qr)>0 && floor(qr/OverlayDownsample)==qr/OverlayDownsample
                 NegBeadImage(UniqueMappedBeads(qr).Pixels)=true;
             end
         end
