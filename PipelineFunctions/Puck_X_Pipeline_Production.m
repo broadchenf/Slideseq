@@ -115,7 +115,7 @@ BeadZeroThreshold=1;
 PixelCutoffRegistration=400;
 PixelCutoffBasecalling=300;
 DropBases=1;
-BeadSizeCutoff=25;
+BeadSizeCutoff=30;
 
 %The illumina barcodes are assumed to be 13 bases long, consisting of the
 %first 6 J bases and then the last 7 J bases. If the barcodes you are using
@@ -270,7 +270,7 @@ if CropImage
             continue
         end
         load(fullfile(MappingOutputFolder,'BijectiveMapping.mat'))
-        image=PlotGeneFromName('Malat1',GeneNames,UniqueMappedDGE,UniqueMappedBeads,'Overlay',1);
+        image=PlotGeneFromName('Malat1',GeneNames,UniqueMappedDGE,UniqueMappedBeads,'Overlay',1,'PlotStyle','Default');
         disp(['Ready to crop puck',num2str(puck)])
         h = imfreehand; %draw something 
         M = h.createMask();

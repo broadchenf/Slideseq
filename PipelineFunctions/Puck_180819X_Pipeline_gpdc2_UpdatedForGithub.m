@@ -106,7 +106,7 @@ LigationToIndexFileMapping=[1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2];%for ligati
 tnumMapping=[2,2,3,4,5,6,7,8,9,10,2,2,3,4,5,6,7,8,9,10];
 PucksToAnalyze=1:15; %These are the values of xy from the .nd2 file that will be analyzed.
 %Note that the order in PuckNames should match the order in the .nd2 file.
-PuckNames={'Puck_180824_1','Puck_180824_2','Puck_180824_3','Puck_180824_4','Puck_180824_5','Puck_180824_6','Puck_180824_7','Puck_180824_8','Puck_180824_9','Puck_180824_10','Puck_180824_11','Puck_180824_12','Puck_180824_13','Puck_180824_14','Puck_180824_15'}; %give the names of the pucks
+PuckNames={'Puck_180819_9','Puck_180819_10','Puck_180819_11','Puck_180819_12'}; %give the names of the pucks
 OutputFolderRoot='\\iodine-cifs\broad_macosko\data\Slideseq\Barcodes\';%\Puck_180106_1\','C:\Users\sgr\Dropbox (MIT)\Project - SlideSeq\Pucks\Barcodes\Puck_180106_2\','C:\Users\sgr\Dropbox (MIT)\Project - SlideSeq\Pucks\Barcodes\Puck_180106_3\','C:\Users\sgr\Dropbox (MIT)\Project - SlideSeq\Pucks\Barcodes\Puck_180106_4\'};
 IlluminaFolderRoot='\\iodine-cifs\broad_macosko\data\Slideseq\Illumina\';
 
@@ -148,7 +148,7 @@ OutputFolders={};
 for puck=1:length(PuckNames)
     ProcessedImageFolders{puck}=[FolderWithProcessedTiffs,PuckNames{puck},'\'];
     mkdir([FolderWithProcessedTiffs,PuckNames{puck}]);
-    OutputFolders{puck}=[OutputFolderRoot,PuckNames{puck},'\'];
+    OutputFolders{puck}=[OutputFolderRoot,PuckNames{puck},'_NewBeadseqfun6\'];
     mkdir(OutputFolders{puck});    
 end
 
