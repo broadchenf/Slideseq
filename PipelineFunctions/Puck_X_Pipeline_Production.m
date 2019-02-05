@@ -60,7 +60,7 @@ addpath([BeadseqCodePath,'\find_roi\helpers']);
 %name of the ligation within that DescriptiveName file series.
 %We convert the files to a final output format:
 %Puck85 Ligation X Position AB
-BeadType="180402"; for 14bp barcodes from 180402 beads
+BeadType="180402";% for 14bp barcodes from 180402 beads
 %BeadType="ReversePhase";
 
 RenameFiles=1;
@@ -75,8 +75,12 @@ RunAnalogizer=[0,2,2,0,2,0,2,2,2,2,2,2,2,0,0,0,1,1,1,0,2,2,2,2];
 AnalogizerBeadCutoff=5; %Note that this threshold is only applied for the variable genes used in the NMFreg, so it can be low
 AnalogizerType="NMFReg";
 %Cerebellum is 1. Hippocampus is 2.
+NMFregPath='\\iodine-cifs\broad_macosko\data\NMFreg\data';
+NMFregFactorNum=30;
+%The following 2 variables are deprecated
 DropseqDGEPaths={'\\iodine-cifs\broad_macosko\data\clusters\atlas_ica\F_GRCm38.81.P60Cerebellum_ALT','\\iodine-cifs\broad_macosko\data\clusters\atlas_ica\F_GRCm38.81.P60Hippocampus'};
 DropseqClusterPaths={'\\iodine-cifs\broad_macosko\data\clusters\atlas_ica\F_GRCm38.81.P60Cerebellum_ALT\assign\F_GRCm38.81.P60Cerebellum_ALT.cluster.assign.RDS','\\iodine-cifs\broad_macosko\data\clusters\atlas_ica\F_GRCm38.81.P60Hippocampus\assign\F_GRCm38.81.P60Hippocampus.cluster.assign.RDS'};
+
 DropseqMeanAndVariancePath=fullfile(BeadseqCodePath,'DGEMeansAndVariances');
 
 NumPar=20;
@@ -147,7 +151,7 @@ OutputFolders={};
 for puck=1:length(PuckNames)
     ProcessedImageFolders{puck}=[FolderWithProcessedTiffs,PuckNames{puck},'\'];
     mkdir([FolderWithProcessedTiffs,PuckNames{puck}]);
-    OutputFolders{puck}=[OutputFolderRoot,PuckNames{puck},'\'];
+    OutputFolders{puck}=[OutputFolderRoot,PuckNames{puck},'_ProductionPipelineTest\'];
     mkdir(OutputFolders{puck});    
 end
 
@@ -356,13 +360,6 @@ for puck=1:length(PuckNames)
         if AnalogizerType=="Analogizer"
             fwrite(commandfile,['cd "C:\Users\sgr\Dropbox (MIT)\Project - SlideSeq\BeadSeq Code" & "C:\Program Files\R\R-3.4.3\bin\Rscript.exe" AnalogizerScript.R ',PuckNames{puck},'\',BeadMappingFile,' ',DropseqDGEPath,' ',DropseqClusterPath,' ',num2str(thisbeadcutoff)]);
         elseif AnalogizerType=="NMFReg"
-            %Bob says:
-%           -da = data path atlas
-%           -dp = data path puck
-%           -t = tissue type (only cerebellum and hippo now
-%           - c = UMI cutoff
-%           - dge = DGE name minus file extension
-%           - bl = Bead locations minus file extension
             switch RunAnalogizer(puck)
                 case 1
                     tissuetype='cerebellum';
@@ -375,21 +372,7 @@ for puck=1:length(PuckNames)
                 otherwise
                     assert(1==0)
             end
-            fwrite(commandfile,['C: & cd "',BeadseqCodePath,'" & "',PythonPath,'" autoNMFreg_windows.py -da \\iodine-cifs\broad_macosko\data\NMFreg\data -dp "',fullfile(OutputFolders{puck},BeadMappingFile),'" -t ',tissuetype,' -c ',num2str(thisbeadcutoff),' -dge MappedDGEForR -bl BeadLocationsForR']);            
-        end
-        fclose(commandfile);
-        !C:/Analogizer
-        if ~exist(fullfile(MappingOutputFolder,'AnalogizerClusterAssignments.csv'))
-            disp('Analogizer Failed. Increasing bead cutoff and continuing.')
-            thisbeadcutoff=thisbeadcutoff+5;
-        end
-        if AnalogizerType=="NMFReg" && exist(fullfile(MappingOutputFolder,'AnalogizerClusterAssignments.csv')) && ~exist(fullfile(MappingOutputFolder,'AnalogizerClusterAssignmentsOriginal.csv'))
-            %NMFReg outputs the cluster assignments in the wrong format
-            opts=detectImportOptions(fullfile(MappingOutputFolder,'AnalogizerClusterAssignments.csv'));
-            ClusterAssignments=readtable(fullfile(MappingOutputFolder,'AnalogizerClusterAssignments.csv'),opts,'ReadVariableNames',true);
-            newtable=table(ClusterAssignments.barcode,ClusterAssignments.atlas_cluster,'VariableNames',{'Var1','x'});
-            movefile(fullfile(MappingOutputFolder,'AnalogizerClusterAssignments.csv'),fullfile(MappingOutputFolder,'AnalogizerClusterAssignmentsOriginal.csv'))
-            writetable(newtable,fullfile(MappingOutputFolder,'AnalogizerClusterAssignments.csv'));
+            NMFreg(MappingOutputFolder,tissuetype,NMFregPath,'AtlasFactors',NMFregFactorNum,'UMICutoff',AnalogizerBeadCutoff)
         end
     end
     switch RunAnalogizer(puck)

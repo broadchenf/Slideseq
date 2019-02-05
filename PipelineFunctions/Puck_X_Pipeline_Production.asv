@@ -60,7 +60,7 @@ addpath([BeadseqCodePath,'\find_roi\helpers']);
 %name of the ligation within that DescriptiveName file series.
 %We convert the files to a final output format:
 %Puck85 Ligation X Position AB
-BeadType="180402";% for 14bp barcodes from 180402 beads
+BeadType="180402"; for 14bp barcodes from 180402 beads
 %BeadType="ReversePhase";
 
 RenameFiles=1;
@@ -71,10 +71,11 @@ NumClusters=[11,17,14,14]; %Cerebellum is 1, hippocampus is 2, frontalcortex is 
 %Which pucks do we try to run analogizer on? 0 if don't run, otherwise, the
 %number here refers to the element of DropseqDGEPaths and
 %DropseqClusterPaths to use as a reference.
-RunAnalogizer=[0,0,2,1,1,0,0,1,1,1,0,1,1,1,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0];
+RunAnalogizer=[0,2,2,0,2,0,2,2,2,2,2,2,2,0,0,0,1,1,1,0,2,2,2,2];
 AnalogizerBeadCutoff=5; %Note that this threshold is only applied for the variable genes used in the NMFreg, so it can be low
 AnalogizerType="NMFReg";
 %Cerebellum is 1. Hippocampus is 2.
+
 DropseqDGEPaths={'\\iodine-cifs\broad_macosko\data\clusters\atlas_ica\F_GRCm38.81.P60Cerebellum_ALT','\\iodine-cifs\broad_macosko\data\clusters\atlas_ica\F_GRCm38.81.P60Hippocampus'};
 DropseqClusterPaths={'\\iodine-cifs\broad_macosko\data\clusters\atlas_ica\F_GRCm38.81.P60Cerebellum_ALT\assign\F_GRCm38.81.P60Cerebellum_ALT.cluster.assign.RDS','\\iodine-cifs\broad_macosko\data\clusters\atlas_ica\F_GRCm38.81.P60Hippocampus\assign\F_GRCm38.81.P60Hippocampus.cluster.assign.RDS'};
 DropseqMeanAndVariancePath=fullfile(BeadseqCodePath,'DGEMeansAndVariances');
@@ -94,17 +95,16 @@ NumLigations=20; %We assume that the missing ligation is Truseq-4 if you are doi
 NumBases=14; %This is the number of bases sequenced
 BarcodeSequence=[1,2,3,4,0,5,0,6,0,7,8,9,10,11,0,12,0,13,0,14];
 %BarcodeSequence=[1,2,3,4,0,5,0,6,7,8,9,10,0,11,0,12,0,13]; %this determines how the numerical barcode is built from the ligations. Basically, the constant bases should be 0, and all other bases should be consecutive
-FolderWithRawTiffs='D:\Slideseq\Raw\190125 - Pucks 180821-X\';
-FolderWithProcessedTiffs='D:\Slideseq\Processed\';
-tmpfolder='D:\pucktmp\';
-IndexFiles={'primers t through t-4','primer t-4 ligation 2 then up through up-4','primers up-3 through up-4'}; %give the prefixes of each of the files. The next character after should be 't',
-LigationToIndexFileMapping=[1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,3,3,3,3];%for ligations 1:20, which file number are the ligations found in?
+FolderWithRawTiffs='\\169.254.130.66\Slideseq\Raw\180821 - Pucks 180821-X\';
+FolderWithProcessedTiffs='\\169.254.130.66\Slideseq\Processed\';
+IndexFiles={'primers t through t-4','primers t-2 through t-4','primers up through up-4 then t-2 through t-4'}; %give the prefixes of each of the files. The next character after should be 't',
+LigationToIndexFileMapping=[1,1,1,1,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,3];%for ligations 1:20, which file number are the ligations found in?
 %for ligations 1:20, which value of t are they, within their file? This
 %could also be deduced from the LigationToIndexFileMapping array
-tnumMapping=[1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,1,2,3,4];
-PucksToAnalyze=[2,3,4,5]; %These are the values of xy from the .nd2 file that will be analyzed.
+tnumMapping=[1,2,3,4,1,2,3,4,5,6,1,2,3,4,5,6,7,8,9,10];
+PucksToAnalyze=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32]; %These are the values of xy from the .nd2 file that will be analyzed.
 %Note that the order in PuckNames should match the order in the .nd2 file.
-PuckNames={'Puck_180821_2','Puck_180821_3','Puck_180821_4','Puck_180821_5'}; %give the names of the pucks
+PuckNames={'Puck_180821_1','Puck_180821_2','Puck_180821_3','Puck_180821_4','Puck_180821_5','Puck_180821_6','Puck_180821_7','Puck_180821_8','Puck_180821_9','Puck_180821_10','Puck_180821_11','Puck_180821_12','Puck_180821_13','Puck_180821_14','Puck_180821_15','Puck_180821_16','Puck_180821_17','Puck_180821_18','Puck_180821_19','Puck_180821_20','Puck_180821_21','Puck_180821_22','Puck_180821_23','Puck_180821_24','Puck_180821_25','Puck_180821_26','Puck_180821_27','Puck_180821_28','Puck_180821_29','Puck_180821_30'}; %give the names of the pucks
 OutputFolderRoot='\\iodine-cifs\broad_macosko\data\Slideseq\Barcodes\';%\Puck_180106_1\','C:\Users\sgr\Dropbox (MIT)\Project - SlideSeq\Pucks\Barcodes\Puck_180106_2\','C:\Users\sgr\Dropbox (MIT)\Project - SlideSeq\Pucks\Barcodes\Puck_180106_3\','C:\Users\sgr\Dropbox (MIT)\Project - SlideSeq\Pucks\Barcodes\Puck_180106_4\'};
 IlluminaFolderRoot='\\iodine-cifs\broad_macosko\data\Slideseq\Illumina\';
 
@@ -148,7 +148,7 @@ OutputFolders={};
 for puck=1:length(PuckNames)
     ProcessedImageFolders{puck}=[FolderWithProcessedTiffs,PuckNames{puck},'\'];
     mkdir([FolderWithProcessedTiffs,PuckNames{puck}]);
-    OutputFolders{puck}=[OutputFolderRoot,PuckNames{puck},'_ProductionPipelineTest\'];
+    OutputFolders{puck}=[OutputFolderRoot,PuckNames{puck},'\'];
     mkdir(OutputFolders{puck});    
 end
 
@@ -369,7 +369,7 @@ for puck=1:length(PuckNames)
                 otherwise
                     assert(1==0)
             end
-            NMFreg(MappingOutputFolder,tissuetype,NMFregPath,'AtlasFactors',NMFregFactorNum,'UMICutoff',AnalogizerBeadCutoff)
+            NMFreg(MappingOutputFolder,tissuetype,'UMICutoff',AnalogizerBeadCutoff)
         end
     end
     switch RunAnalogizer(puck)
