@@ -1,10 +1,14 @@
-function BeadImage=PlotCellFactorLoadings(PuckName,Cluster,varargin)
+function BeadImage=PlotCellFactorLoadings(PuckName,Cluster,mode,varargin)
 %This is a hack on top of PlotGene. We get the factors and then pass them
 %to PlotGene
 
 FactorLoadings=GetFactorLoadings(PuckName);
 
-ThresholdedFactorLoadings=FactorLoadings(:,Cluster).*sum(DGE,1);
+if mode==1
+    ThresholdedFactorLoadings=FactorLoadings(:,Cluster);
+elseif mode==2
+    ThresholdedFactorLoadings=FactorLoadings(:,Cluster).*sum(DGE,1);
+end
 
 %ThresholdedFactorLoadings=FactorLoadings(:,Cluster);
 %ThresholdedFactorLoadings(ThresholdedFactorLoadings<0.05)=0;

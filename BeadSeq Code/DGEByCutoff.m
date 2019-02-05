@@ -28,4 +28,4 @@ function [ClusterUniqueMappedDGE,ClusterUniqueMappedBeads,ClusterUniqueMappedIll
     ClusterUniqueMappedDGE=DGE(:,GoodBeads);
     ClusterUniqueMappedBeads=Beads(GoodBeads);
     ClusterUniqueMappedIlluminaBarcodes=Barcodes(GoodBeads);
-    FactorWeight=FactorLoadings(:,Cluster);
+    FactorWeight=FactorLoadings(GoodBeads,Cluster);

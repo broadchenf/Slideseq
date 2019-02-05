@@ -4,5 +4,10 @@ function [GeneNames,UniqueMappedBeads,UniqueMappedDGE,UniqueMappedIlluminaBarcod
     if ~isempty(index)
         CropSuffix=varargin{index+1};
     end
-
-    load(fullfile(GetPuckDirectory(PuckName),FindMostRecentMapping(GetPuckDirectory(PuckName)),['BijectiveMapping',CropSuffix,'.mat']))
+    index = find(cellfun(@(x) (all(ischar(x)) || isstring(x))&&(string(x)=="BeadMappingFile"), varargin, 'UniformOutput', 1));
+    if ~isempty(index)
+        BeadMappingFile=varargin{index+1};
+    else
+        BeadMappingFile=FindMostRecentMapping(GetPuckDirectory(PuckName));
+    end
+    load(fullfile(GetPuckDirectory(PuckName),BeadMappingFile,['BijectiveMapping',CropSuffix,'.mat']))

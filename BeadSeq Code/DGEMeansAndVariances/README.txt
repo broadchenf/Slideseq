@@ -1,1 +1,0 @@
-This file contains CSVs with the mean and variance of the different tissue types we're looking at, by cluster.

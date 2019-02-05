@@ -13,6 +13,8 @@ function BeadImage=PlotGene(GeneNum,UniqueMappedDGE,UniqueMappedBeads,varargin)
         Normalize=1;
     end
     
+
+    
     
     BeadSizeFactor=1;
     index = find(cellfun(@(x) (all(ischar(x)) || isstring(x))&&(string(x)=="BeadSizeFactor"), varargin, 'UniformOutput', 1));
@@ -47,6 +49,14 @@ function BeadImage=PlotGene(GeneNum,UniqueMappedDGE,UniqueMappedBeads,varargin)
     if ~isempty(index)
         Cluster=varargin{index+1};
     end
+    
+    FilterByCutoff=0;
+    index = find(cellfun(@(x) (all(ischar(x)) || isstring(x))&&(string(x)=="FilterByCutoff"), varargin, 'UniformOutput', 1));
+    if ~isempty(index)
+        FilterByCutoff=varargin{index+1};
+    end
+    
+    
     %If cluster>0, then you also have to give a puck name.
     PuckName="None";
     index = find(cellfun(@(x) (all(ischar(x)) || isstring(x))&&(string(x)=="PuckName"), varargin, 'UniformOutput', 1));
@@ -57,10 +67,12 @@ function BeadImage=PlotGene(GeneNum,UniqueMappedDGE,UniqueMappedBeads,varargin)
         disp('If Cluster>0, you must specify a puck name.')
         assert(1==0)
     end
+    
+    
 
     
     %You are given a full DGE, and asked to plot on a subset.
-    if length(Cluster)>1 || Cluster >0 %You now have to run DGEFromCluster, but without loading the DGE in.
+    if FilterByCutoff==0&& (length(Cluster)>1 || Cluster >0) %You now have to run DGEFromCluster, but without loading the DGE in.
         PuckDirectory=GetPuckDirectory(PuckName);
         BeadMappingFile=FindMostRecentMapping(PuckDirectory);
         ClusterPath=fullfile(PuckDirectory,BeadMappingFile,'AnalogizerClusterAssignments.csv');
@@ -83,6 +95,8 @@ function BeadImage=PlotGene(GeneNum,UniqueMappedDGE,UniqueMappedBeads,varargin)
         UniqueMappedDGE=UniqueMappedDGE(:,BeadsInCluster);
         UniqueMappedBeads=UniqueMappedBeads(BeadsInCluster);
     end
+    
+    
 
     ImageSize=6030;
 
