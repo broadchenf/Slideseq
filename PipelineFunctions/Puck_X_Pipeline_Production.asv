@@ -60,7 +60,7 @@ addpath([BeadseqCodePath,'\find_roi\helpers']);
 %name of the ligation within that DescriptiveName file series.
 %We convert the files to a final output format:
 %Puck85 Ligation X Position AB
-BeadType="180402";% for 14bp barcodes from 180402 beads
+BeadType="180402"; for 14bp barcodes from 180402 beads
 %BeadType="ReversePhase";
 
 RenameFiles=1;
@@ -75,12 +75,9 @@ RunAnalogizer=[0,2,2,0,2,0,2,2,2,2,2,2,2,0,0,0,1,1,1,0,2,2,2,2];
 AnalogizerBeadCutoff=5; %Note that this threshold is only applied for the variable genes used in the NMFreg, so it can be low
 AnalogizerType="NMFReg";
 %Cerebellum is 1. Hippocampus is 2.
-NMFregPath='\\iodine-cifs\broad_macosko\data\NMFreg\data';
-NMFregFactorNum=30;
-%The following 2 variables are deprecated
+
 DropseqDGEPaths={'\\iodine-cifs\broad_macosko\data\clusters\atlas_ica\F_GRCm38.81.P60Cerebellum_ALT','\\iodine-cifs\broad_macosko\data\clusters\atlas_ica\F_GRCm38.81.P60Hippocampus'};
 DropseqClusterPaths={'\\iodine-cifs\broad_macosko\data\clusters\atlas_ica\F_GRCm38.81.P60Cerebellum_ALT\assign\F_GRCm38.81.P60Cerebellum_ALT.cluster.assign.RDS','\\iodine-cifs\broad_macosko\data\clusters\atlas_ica\F_GRCm38.81.P60Hippocampus\assign\F_GRCm38.81.P60Hippocampus.cluster.assign.RDS'};
-
 DropseqMeanAndVariancePath=fullfile(BeadseqCodePath,'DGEMeansAndVariances');
 
 NumPar=20;
@@ -151,7 +148,7 @@ OutputFolders={};
 for puck=1:length(PuckNames)
     ProcessedImageFolders{puck}=[FolderWithProcessedTiffs,PuckNames{puck},'\'];
     mkdir([FolderWithProcessedTiffs,PuckNames{puck}]);
-    OutputFolders{puck}=[OutputFolderRoot,PuckNames{puck},'_ProductionPipelineTest\'];
+    OutputFolders{puck}=[OutputFolderRoot,PuckNames{puck},'\'];
     mkdir(OutputFolders{puck});    
 end
 
@@ -372,7 +369,7 @@ for puck=1:length(PuckNames)
                 otherwise
                     assert(1==0)
             end
-            NMFreg(MappingOutputFolder,tissuetype,NMFregPath,'AtlasFactors',NMFregFactorNum,'UMICutoff',AnalogizerBeadCutoff)
+            NMFreg(MappingOutputFolder,tissuetype,'UMICutoff',AnalogizerBeadCutoff)
         end
     end
     switch RunAnalogizer(puck)

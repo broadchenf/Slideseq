@@ -106,16 +106,16 @@ end
 pool=parpool(NumPar);
 %addAttachedFiles(pool,'D:\Dropbox\Insitubiology Dropbox\insitubiology\Project - SlideSeq\BeadSeq Code\find_roi\helpers\fit_isometry.m');
 
-%parfor mm=2:l
-for mm=2:l
+parfor mm=2:l
+%for mm=2:l
     %queryOrig=max(queryOrigstack(:,:,:,mm),[],3);
     query=max(querystack(:,:,:,mm),[],3);
     
     tformEstimate = imregcorr(query,map);
     Rfixed = imref2d(size(map));
     movingReg = imwarp(query,tformEstimate,'OutputView',Rfixed);
-    figure()
-    imshowpair(map,movingReg)
+    %figure()
+    %imshowpair(map,movingReg)
     
 %     %When isPrecomputed is not in use, db_old is not used either
 %     if 0
@@ -147,9 +147,9 @@ for mm=2:l
 %         (numel(d1s) == numel(database2)) && isequal(database2,db_old);
 
 
-    try
+    
         for k=1:4
-            imwrite(movingReg,[BaseName,pad(num2str(mm),2,'left','0'),' channel ',int2str(k),suffix,' transformLMC.tif'])
+            imwrite(imwarp(squeeze(queryOrigstack(:,:,k,mm)),tformEstimate,'OutputView',Rfixed),[BaseName,pad(num2str(mm),2,'left','0'),' channel ',int2str(k),suffix,' transformLMC.tif'])
         end
 %       k=1
 %        imwrite(imtransform(queryOrigstack1(:,:,mm),tform,'XData',[1, size(query,2)],'YData',[1, size(query,1)]),[BaseName,pad(num2str(mm),2,'left','0'),' channel ',int2str(k),suffix,' transform.tif'])
@@ -164,7 +164,7 @@ for mm=2:l
 %         disp([ME.identifier,': ',ME.message])
 %         disp('The transform is:')
 %         %disp(tform.tdata)
-    end
+    
 
 
 end
