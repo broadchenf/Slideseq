@@ -1,13 +1,13 @@
 Most Slide-seq code is written in Matlab, with the exception of the NMFreg algorithm and some specific analysis scripts used for individual figures. The code is designed to run on Windows, but because Matlab is self-contained, the code should run on other operating systems with minor modifications.
 The following readme is intended to assist interested users in working with the analysis code developed for the Slideseq paper.
 
-****It is not intended to be a distributable, user-friendly software package.****
+****Although this code is sufficient to reproduce the figures in the paper, users may encounter various errors relating to paths and operating system issues.****
 We provide no warranty. Please reach out to us if you need assistance, and we will help you however we can.
 
 We intend to release a full Slide-seq software package at some point in the coming months.
 
 *********Directory Structure***********
-Processed slide-seq data is stored in a directory entitled "Barcodes". The base calling data for each puck is stored in a folder entitled "Puck_YYMMDD_NN", where YYMMDD is the day it was made, and NN is a number assigned to that puck.
+Processed slide-seq data is stored in a directory entitled "Barcodes", which is held in the Geo directory. The base calling data for each puck is stored in a folder entitled "Puck_YYMMDD_NN", where YYMMDD is the day it was made, and NN is a number assigned to that puck.
 
 Within the Puck_YYMMDD directory, there is a BeadMapping directory, of the form BeadMapping_M-D_hhmm, where M and D are the month and date (either 1 or 2 digits), hh is an hour and mm is a minute marker. This denotes the time when the mapping between solid barcodes and illumina barcodes was run, to prevent future mappings from overwriting old mappings.
 For pucks that were mapped to illumina data after December 2018, the form is BeadMapping_YYYY_M-D_hhmm
@@ -18,7 +18,7 @@ If you are looking to analyze your data with R or another language, bead locatio
 If you are making your own pucks, read the Puck Processing section.
 
 *********PUCK PROCESSING************
-Pucks are processed using the Puck_X_Pipeline.mat script. Parameters in the preamble must be altered, as follows:
+Pucks are processed using the Puck_X_Pipeline_Production.mat script. Parameters in the preamble must be altered, as follows:
 
 ***INPUTS***
 PythonPath: If you are using NMFReg, this should point to your python executable. If you are not running NMFReg with the pipeline, this variable has no effect.
@@ -105,13 +105,8 @@ Note that as currently implemented, and as used throughout the paper, Permutatio
 
 *********OTHER ANALYSIS***********
 >>>>>>>Setting up your analysis:
-After installing Matlab, we recommend that users edit the contents of the GetPuckDirectory function in Beadseq Code to point to their Barcodes directory. The Barcodes directory is the directory labeled "Barcodes" in the Geo repository if you are using the data from the Manuscript, or is the target of the OutputFolderRoot variable in the pipeline function if you are using your own pucks.
+After installing Matlab, we recommend that users download the Barcodes directory from the Geo repository and edit the contents of the GetPuckDirectory function in Beadseq Code to point to their Barcodes directory. The Barcodes directory is the directory labeled "Barcodes" in the Geo repository if you are using the data from the Manuscript, or is the target of the OutputFolderRoot variable in the pipeline function if you are using your own pucks.
 After editing that line in GetPuckDirectory, you will be able to conveniently access the data from the paper using LoadBijectiveMapping, as described below.
-
-In addition, in order to be able to run NMFreg on the tissue types used in the paper, you must take the following steps:
-
-
-In order to run 
 
 As with most Matlab functions, optional arguments are provided as Name,Value pairs.
 
@@ -190,7 +185,7 @@ Note that even if Cluster is not specified, the DGE you get with GetFactorLoadin
 Syntax: NMFreg(PuckName,TissueType,TissuePath,varargin)
 This function runs NMFreg.
 
-In order to run NMFreg, you must have the files dge_hvgs_matlab.csv and cell_cluster_outcome.csv in a directory (see TissueType, below). dge_hvgs_matlab.csv is the atlas DGE (beads by genes), with barcodes in the first column and genes in the first row. cell_cluster_outcome.csv is a csv with two columns, the first having barcodes and the second having atlas cluster assignments. Note that the first entry of dge_hvgs_matlab.csv must be a comma, i.e. the 0,0th position of the array must be empty for the gene names to be read correctly.
+In order to run NMFreg, you must have the files dge_hvgs_matlab.csv and cell_cluster_outcome.csv in a directory (see TissueType, below). dge_hvgs_matlab.csv is the atlas DGE (beads by genes), with barcodes in the first column and genes in the first row. cell_cluster_outcome.csv is a csv with two columns, the first having barcodes and the second having atlas cluster assignments. Note that the first entry of dge_hvgs_matlab.csv must be a comma, i.e. the 0,0th position of the array must be empty for the gene names to be read correctly. The files used for NMFreg in the paper are stored in a directory titled "NMFreg dependencies" in the Geo repository. That directory can be used as the TissuePath variable for NMFreg.
 
 Inputs:
 --PuckName: A valid PuckName. If the Puckname is not valid, then it is interpreted as a BeadMapping directory, which is then also the default OutputDirectory.
@@ -232,6 +227,9 @@ Syntax: BeadIndices=GetBeadsInRegion(DGE,Beads,GeneNames)
 This function displays an image of all beads expressing Malat1, which is typically helpful for visualizing cell bodies. It then prompts the user to crop the image freehand.
 
 Output: A binary vector with the same size as Beads. Beads(BeadIndices) gives all beads that are within the convex hull of the region drawn by the user.
+
+VariableInputs:
+--ImageSize
 
 >>>>>>>>FindVariableGenes
 Syntax: [VariableGenes,VariableGeneIndices,VMRZScoresOutput]=FindVariableGenes(DGE,GeneNames)
@@ -288,7 +286,7 @@ Optional inputs:
 --"Normalize": If "Normalize" is set to 1, then the counts of the indicated transcripts as a fraction of the total number of counts on the bead is plotted. If 0, the absolute number of transcripts is plotted. "Normalize" is currently only implemented for PlotStyle="Circles".
 --"BeadSizeFactor": For "Circles", the bead radius is scaled by BeadSizeFactor.
 --"FigNum": Determines which figure number to use when plotting.
-
+--"ImageSize": Image Size
 Examples:
 PlotGeneFromName('Mybpc1',GeneNames,DGE,Beads,'PlotStyle','Circles','Cluster',2,'PuckName','Puck_180819_12');
 Note that if you are using the 'Cluster' argument for PlotGeneFromName (which only plots genes restricted to beads called as a particular 
